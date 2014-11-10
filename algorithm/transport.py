@@ -1,6 +1,7 @@
 from random import randrange
-from util import constrained_sum_sample_pos
-from settings import *
+
+from utils.helper import constrained_sum_sample_pos
+from utils.settings import *
 
 
 def get_distance_matrix(random=False, max_distance=10):
