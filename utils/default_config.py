@@ -3,13 +3,10 @@ from model.depot import Depot
 # maximum capacity of a vehicle
 MAX_CAPACITY = 100
 
-# # number of vehicles
-# VEHICLE_CNT = 5
-
 DEPOT_CNT = 10
 
 EX_DISTANCE_MATRIX = [
-    [0, 1, 9, 4, 2, 7, 10, 3, 8, 5],
+    [0, 1, 9, 4, 2, 7, 10, 3, 8, 5],  # distances from main depot (0)
     [1, 0, 7, 9, 6, 6, 10, 8, 8, 5],
     [9, 7, 0, 9, 7, 5, 1, 1, 4, 5],
     [4, 9, 9, 0, 1, 3, 2, 6, 8, 1],
@@ -22,7 +19,6 @@ EX_DISTANCE_MATRIX = [
 ]
 
 EX_DEPOTS = [
-    Depot(0, 22),
     Depot(1, 34),
     Depot(2, 45),
     Depot(3, 50),
@@ -33,3 +29,5 @@ EX_DEPOTS = [
     Depot(8, 56),
     Depot(9, 85)
 ]
+
+
