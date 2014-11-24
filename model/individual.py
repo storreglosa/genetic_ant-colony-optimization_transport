@@ -35,7 +35,7 @@ class Route(object):
         self.depots[after:after] = subroute
 
     def __str__(self):
-        return 'Route: {route_no: %d; depots: %s}' % (self.route_no, self.depots)
+        return 'Route: {route_no: %d, depots: %s}' % (self.route_no, self.depots)
 
     def __repr__(self):
         return self.__str__()

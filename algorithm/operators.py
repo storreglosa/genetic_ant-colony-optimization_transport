@@ -20,10 +20,28 @@ class Operators(object):
             result.add_depot(depot, self.settings.max_capacity)
         return result
 
+    def _generate_individual2(self):
+        depots = self.settings.depots
+        random.shuffle(depots)
+        result = Individual()
+        i = 0
+        while depots:
+            k = random.randrange(1, len(depots) + 1)
+            result.routes.append(Route(i, deepcopy(depots[0:k])))
+            del depots[0:k]
+            i += 1
+        return result
+
     def init_population(self, size=100):
         population = []
         for i in range(size):
             population.append(self._generate_individual())
+        return population
+
+    def init_population2(self, size=100):
+        population = []
+        for i in range(size):
+            population.append(self._generate_individual2())
         return population
 
     def evaluate_individual(self, individual):
@@ -59,9 +77,19 @@ class Operators(object):
         descendant.normalize(self.settings.max_capacity)
         return descendant
 
-    def mutation(self):
-        pass
+    def swap(self, individual):
+        routes = individual.routes
+        first_route_idx = random.randrange(0, len(routes))
+        first_dept_idx = random.randrange(0, len(routes[first_route_idx].depots))
 
+        second_route_idx = random.randrange(0, len(routes))
+        second_dept_idx = random.randrange(0, len(routes[second_route_idx].depots))
+
+        first = deepcopy(routes[first_route_idx].depots[first_dept_idx])
+        routes[first_route_idx].depots[first_dept_idx] = routes[second_route_idx].depots[
+            second_dept_idx]
+        routes[second_route_idx].depots[second_dept_idx] = first
+        individual.normalize(self.settings.max_capacity)
 
 def main():
     op = Operators()
@@ -69,6 +97,7 @@ def main():
     parent1 = population[0]
     parent2 = population[1]
     descendant = op.crossover(parent1, parent2)
+    op.swap(parent1)
     print op.evaluate_individual(parent2)
     print op.evaluate_individual(parent1)
     print op.evaluate_individual(descendant)

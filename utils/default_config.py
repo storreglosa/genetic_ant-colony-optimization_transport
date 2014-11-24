@@ -3,6 +3,8 @@ from model.depot import Depot
 # maximum capacity of a vehicle
 MAX_CAPACITY = 100
 
+MAX_DEMAND = 50
+
 DEPOT_CNT = 10
 
 EX_DISTANCE_MATRIX = [

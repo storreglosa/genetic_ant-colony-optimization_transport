@@ -26,7 +26,7 @@ class Depot(object):
         return hash((self.depot_no, self.demand))
 
     def __str__(self):
-        return 'Depot: {depot_no: %s; demand: %s}' % (self.depot_no, self.demand)
+        return 'Depot: {depot_no: %s, demand: %s}' % (self.depot_no, self.demand)
 
     def __repr__(self):
         return str(self)
