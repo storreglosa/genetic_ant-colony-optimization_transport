@@ -5,31 +5,31 @@ from utils.default_config import *
 
 class Config(object):
     def __init__(self, max_demand=MAX_DEMAND, max_capacity=MAX_CAPACITY, depot_cnt=DEPOT_CNT, randomize=False):
-        self._max_capacity = max_capacity
-        self._max_demand = max_demand
-        self._depot_cnt = depot_cnt
+        self._max_capacity = deepcopy(max_capacity)
+        self._max_demand = deepcopy(max_demand)
+        self._depot_cnt = deepcopy(depot_cnt)
         self._depots = self._get_depots(rnd=randomize)
         self._distance_matrix = self._get_distance_matrix(rnd=randomize)
 
     @property
     def max_demand(self):
-        return deepcopy(self._max_demand)
+        return self._max_demand
 
     @property
     def max_capacity(self):
-        return deepcopy(self._max_capacity)
+        return self._max_capacity
 
     @property
     def depot_cnt(self):
-        return deepcopy(self._depot_cnt)
+        return self._depot_cnt
 
     @property
     def depots(self):
-        return deepcopy(self._depots)
+        return self._depots
 
     @property
     def distance_matrix(self):
-        return deepcopy(self._distance_matrix)
+        return self._distance_matrix
 
     def _get_distance_matrix(self, rnd=False, max_distance=10):
         size = self.depot_cnt

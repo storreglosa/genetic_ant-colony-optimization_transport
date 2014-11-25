@@ -3,7 +3,7 @@ from model.depot import Depot
 # maximum capacity of a vehicle
 MAX_CAPACITY = 100
 
-MAX_DEMAND = 50
+MAX_DEMAND = 100
 
 DEPOT_CNT = 10
 

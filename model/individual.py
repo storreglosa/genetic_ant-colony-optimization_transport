@@ -3,6 +3,10 @@ class Route(object):
         self._route_no = route_no
         self._depots = depots
 
+    @staticmethod
+    def of(route):
+        return Route(route.route_no, list(route.depots))
+
     @property
     def route_no(self):
         return self._route_no
@@ -49,6 +53,10 @@ class Individual(object):
         if not routes:
             routes = []
         self._routes = routes
+
+    @staticmethod
+    def of(individual):
+        return type(individual)([Route.of(r) for r in individual.routes])
 
     @property
     def routes(self):

@@ -1,3 +1,4 @@
+import cProfile
 import random
 from deap import base
 from deap import creator
@@ -6,17 +7,17 @@ from algorithm.operators import Operators
 from model.individual import Individual
 from utils.config import Config
 
-random.seed(56146)
+random.seed(64)
 
-config = Config(max_demand=10, max_capacity=100, depot_cnt=76, randomize=True)
-# config = Config()
+config = Config(max_demand=10, max_capacity=100, depot_cnt=30, randomize=True)
+#config = Config()
 operators = Operators(settings=config)
 creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
 creator.create("Individual", Individual, fitness=creator.FitnessMin)
 
 
 def deap_population(deap_type, size):
-    my_population = operators.init_population2(size)
+    my_population = operators.init_population(size)
     return [deap_type(my_individual.routes) for my_individual in my_population]
 
 
@@ -34,7 +35,7 @@ toolbox.register("population", deap_population, creator.Individual)
 toolbox.register("evaluate", deap_evaluation)
 toolbox.register("mate", deap_crossover, creator.Individual)
 toolbox.register("mutate", operators.swap)
-toolbox.register("select", tools.selTournament, tournsize=5)
+toolbox.register("select", tools.selTournament, tournsize=3)
 
 
 def print_stats(pop):
@@ -50,7 +51,7 @@ def print_stats(pop):
 
 
 def main():
-    mate_prob, mut_prob, gen_num, pop_size = 0.75, 0.1, 20, 200
+    mate_prob, mut_prob, gen_num, pop_size = 0.75, 0.1, 200, 50
 
     pop = toolbox.population(size=pop_size)
 
@@ -64,15 +65,14 @@ def main():
     print("  Evaluated %i individuals" % len(pop))
     print_stats(pop)
 
-
     # Begin the evolution
     for g in range(gen_num):
         print("-- Generation %i --" % g)
 
         # Select the next generation individuals
-        offspring = toolbox.select(pop, 100)
+        offspring = toolbox.select(pop, 50)
         # Clone the selected individuals
-        offspring = list(map(toolbox.clone, offspring))
+        offspring = list(map(Individual.of, offspring))
         random.shuffle(offspring)
 
         # Apply crossover and mutation on the offspring

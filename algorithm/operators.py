@@ -21,13 +21,13 @@ class Operators(object):
         return result
 
     def _generate_individual2(self):
-        depots = self.settings.depots
+        depots = list(self.settings.depots)
         random.shuffle(depots)
         result = Individual()
         i = 0
         while depots:
             k = random.randrange(1, len(depots) + 1)
-            result.routes.append(Route(i, deepcopy(depots[0:k])))
+            result.routes.append(Route(i, depots[0:k]))
             del depots[0:k]
             i += 1
         return result
@@ -71,7 +71,7 @@ class Operators(object):
                 current_route.insert_subroute(subroute, after=closest_depot_no)
 
     def crossover(self, first_individual, second_individual):
-        descendant = deepcopy(first_individual)
+        descendant = Individual.of(first_individual)
         subroute = self._get_random_subroute(second_individual)
         self._insert_subroute(subroute, descendant)
         descendant.normalize(self.settings.max_capacity)
@@ -85,26 +85,11 @@ class Operators(object):
         second_route_idx = random.randrange(0, len(routes))
         second_dept_idx = random.randrange(0, len(routes[second_route_idx].depots))
 
-        first = deepcopy(routes[first_route_idx].depots[first_dept_idx])
+        first = routes[first_route_idx].depots[first_dept_idx]
         routes[first_route_idx].depots[first_dept_idx] = routes[second_route_idx].depots[
             second_dept_idx]
         routes[second_route_idx].depots[second_dept_idx] = first
         individual.normalize(self.settings.max_capacity)
-
-def main():
-    op = Operators()
-    population = op.init_population()
-    parent1 = population[0]
-    parent2 = population[1]
-    descendant = op.crossover(parent1, parent2)
-    op.swap(parent1)
-    print op.evaluate_individual(parent2)
-    print op.evaluate_individual(parent1)
-    print op.evaluate_individual(descendant)
-
-
-if __name__ == "__main__":
-    main()
 
 
 
