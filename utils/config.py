@@ -31,7 +31,7 @@ class Config(object):
     def distance_matrix(self):
         return self._distance_matrix
 
-    def _get_distance_matrix(self, rnd=False, max_distance=10):
+    def _get_distance_matrix(self, rnd=False, max_distance=100):
         size = self.depot_cnt
         result = deepcopy(EX_DISTANCE_MATRIX)
         if rnd:

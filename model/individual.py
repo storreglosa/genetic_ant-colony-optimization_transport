@@ -1,5 +1,10 @@
+import random
+
+
 class Route(object):
-    def __init__(self, route_no, depots):
+    def __init__(self, route_no=-1, depots=None):
+        if not depots:
+            depots = []
         self._route_no = route_no
         self._depots = depots
 
@@ -10,6 +15,10 @@ class Route(object):
     @property
     def route_no(self):
         return self._route_no
+
+    @route_no.setter
+    def route_no(self, route_no):
+        self._route_no = route_no
 
     @property
     def depots(self):
@@ -27,6 +36,11 @@ class Route(object):
             result += distance_array[curr.depot_no][nxt.depot_no]
         return result
 
+    def insert_depot(self, depot):
+        depots_cnt = len(self.depots)
+        after_idx = random.randint(0, depots_cnt)
+        self.insert_subroute([depot], after_idx)
+
     def contains_depot(self, depot_no):
         depot_nos = [depot.depot_no for depot in self.depots]
         return depot_no in depot_nos
@@ -38,6 +52,11 @@ class Route(object):
     def insert_subroute(self, subroute, after):
         self.depots[after:after] = subroute
 
+    def __eq__(self, other):
+        if isinstance(other, Route):
+            return self.route_no == other.route_no and self.depots == other.depots
+        return False
+
     def __str__(self):
         return 'Route: {route_no: %d, depots: %s}' % (self.route_no, self.depots)
 
@@ -46,6 +65,9 @@ class Route(object):
 
     def __unicode__(self):
         return unicode(self.__str__())
+
+    def __len__(self):
+        return len(self.depots)
 
 
 class Individual(object):
@@ -72,17 +94,63 @@ class Individual(object):
             new_route = Route(len(self.routes), [depot])
             self.routes.append(new_route)
 
-    def normalize(self, max_demand_on_route):
-        all_depots = [depot for route in self.routes for depot in route.depots]
-        unique_depots = set()
-        for depo in all_depots:
-             unique_depots.add(depo)
-        self._routes = []
-        for depot in unique_depots:
-            self.add_depot(depot, max_demand_on_route)
+    def add_route(self, depots=None, route=None):
+        if depots:
+            new_route_no = len(self.routes)
+            self.routes.append(Route(new_route_no, depots))
+        if route:
+            new_route_no = len(self.routes)
+            route._route_no = new_route_no
+            self.routes.append(route)
 
+    def add_routes(self, routes):
+        for route in routes:
+            self.add_route(route=route)
 
+    @staticmethod
+    def _split_route(route, max_demand_on_route):
+        depots = route.depots
+        if route.sum_of_demands() <= max_demand_on_route:
+            result = [route]
+        else:
+            result = [Route()]
+            for i in xrange(len(route) - 1, -1, -1):
+                current_new_route = result[-1]
+                current_depot = depots[i]
+                next_demand_sum = current_new_route.sum_of_demands() + current_depot.demand
+                if next_demand_sum <= max_demand_on_route:
+                    current_new_route.depots.append(current_depot)
+                else:
+                    result.append(Route(depots=[current_depot]))
+        return result
 
+    def normalize(self, max_demand_on_route, expected_depot_cnt=None):
+        new_routes = []
+        for route in self.routes:
+            if route.sum_of_demands() > max_demand_on_route:
+                divided_routes = self._split_route(route, max_demand_on_route)
+                new_routes += divided_routes
+        filtered_routes = [route for route in self.routes if max_demand_on_route >= route.sum_of_demands() > 0]
+        self._routes = new_routes + filtered_routes
+        for i in xrange(len(self.routes)):
+            self.routes[i].route_no = i
+        if expected_depot_cnt:
+            depots_in_individual = [depot for route in self.routes for depot in route.depots]
+            if len(set(depots_in_individual)) != expected_depot_cnt - 1:
+                raise Exception("Invalid depot count")
+
+    def route_with_depot(self, depot):
+        for route in self.routes:
+            if depot in route.depots:
+                return route
+
+    def insert_depot(self, depot):
+        route_with_depot = self.route_with_depot(depot)
+        route_with_depot.depots.remove(depot)
+        if random.random() < (1. / (2. * len(self.routes))):
+            self.add_route([depot])
+        else:
+            random.choice(self.routes).insert_depot(depot)
 
     def __str__(self):
         return 'Individual: {Routes: %s}' % self.routes

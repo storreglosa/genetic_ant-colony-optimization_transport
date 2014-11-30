@@ -5,11 +5,12 @@ from deap import creator
 from deap import tools
 from algorithm.operators import Operators
 from model.individual import Individual
+from model.test_individual import TestRoute
 from utils.config import Config
 
 random.seed(64)
 
-config = Config(max_demand=10, max_capacity=100, depot_cnt=30, randomize=True)
+config = Config(max_demand=27, max_capacity=97, depot_cnt=37, randomize=True)
 #config = Config()
 operators = Operators(settings=config)
 creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
@@ -25,19 +26,6 @@ def deap_evaluation(*args):
     return operators.evaluate_individual(*args),
 
 
-def deap_crossover(deap_type, child1, child2):
-    descendant = operators.crossover(child1, child2)
-    return deap_type(descendant.routes)
-
-
-toolbox = base.Toolbox()
-toolbox.register("population", deap_population, creator.Individual)
-toolbox.register("evaluate", deap_evaluation)
-toolbox.register("mate", deap_crossover, creator.Individual)
-toolbox.register("mutate", operators.swap)
-toolbox.register("select", tools.selTournament, tournsize=3)
-
-
 def print_stats(pop):
     fits = [ind.fitness.values[0] for ind in pop]
     length = len(pop)
@@ -50,8 +38,25 @@ def print_stats(pop):
     print("  Std %s" % std)
 
 
+def deap_crossover(deap_type, child1, child2):
+    descendant = operators.crossover(child1, child2)
+    return deap_type(descendant.routes)
+
+
+toolbox = base.Toolbox()
+toolbox.register("population", deap_population, creator.Individual)
+toolbox.register("evaluate", deap_evaluation)
+toolbox.register("mate", deap_crossover, creator.Individual)
+toolbox.register("swap", operators.swap)
+toolbox.register("inversion", operators.inversion)
+toolbox.register("insertion", operators.insertion)
+toolbox.register("displacement", operators.displacement)
+toolbox.register("select", tools.selTournament, tournsize=3)
+
+
 def main():
-    mate_prob, mut_prob, gen_num, pop_size = 0.75, 0.1, 200, 50
+    gen_num, pop_size = 200, 200
+    mate_prob, swap_prob, inversion_prob, insertion_prob, displacement_prob = 0.75, 0.05, 0.1, 0.05, 0.1
 
     pop = toolbox.population(size=pop_size)
 
@@ -82,8 +87,17 @@ def main():
                 offspring.append(descendant)
 
         for mutant in offspring:
-            if random.random() < mut_prob:
-                toolbox.mutate(mutant)
+            if random.random() < swap_prob:
+                toolbox.swap(mutant)
+                del mutant.fitness.values
+            if random.random() < insertion_prob:
+                toolbox.insertion(mutant)
+                del mutant.fitness.values
+            if random.random() < inversion_prob:
+                toolbox.inversion(mutant)
+                del mutant.fitness.values
+            if random.random() < displacement_prob:
+                toolbox.displacement(mutant)
                 del mutant.fitness.values
 
         # Evaluate the individuals with an invalid fitness
@@ -108,4 +122,5 @@ def main():
 
 if __name__ == "__main__":
     main()
+
 

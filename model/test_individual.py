@@ -1,6 +1,6 @@
 from unittest import TestCase
 from model.depot import Depot
-from model.individual import Route
+from model.individual import Route, Individual
 
 __author__ = 'Marek'
 
@@ -33,12 +33,23 @@ class TestRoute(TestCase):
 
     def test_calculate_length_one_depot(self):
         depots = self.depots[0:1]
-        route = Route(Vehicle(0), depots)
+        route = Route(0, depots)
         length = route.calculate_length(self.distance_matrix)
         self.assertTrue(length == 2)
 
     def test_calculate_length_many_depots(self):
         depots = self.depots[0:3]
-        route = Route(Vehicle(0), depots)
+        route = Route(0, depots)
         length = route.calculate_length(self.distance_matrix)
         self.assertEqual(length, 21)
+
+    def test_normalize(self):
+        individual = Individual([Route(0, self.depots)])
+        individual.normalize(100)
+
+        self.assertGreater(len(individual.routes), 1)
+        for route in individual.routes:
+            self.assertTrue(route.sum_of_demands() <= 100)
+
+        depots_in_individual = [depot for route in individual.routes for depot in route.depots]
+        self.assertItemsEqual(depots_in_individual, self.depots)

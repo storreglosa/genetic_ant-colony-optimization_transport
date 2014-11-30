@@ -57,8 +57,7 @@ class Operators(object):
         random_route_len = len(random_route)
         if random_route_len <= 1:
             return random_route
-        start_idx = random.randrange(0, random_route_len - 1)
-        end_idx = random.randrange(start_idx + 1, random_route_len + 1)
+        end_idx, start_idx = Operators._get_random_subroute_indices(random_route_len)
         return random_route[start_idx:end_idx]
 
     def _insert_subroute(self, subroute, individual):
@@ -70,11 +69,19 @@ class Operators(object):
             if current_route.contains_depot(closest_depot_no):
                 current_route.insert_subroute(subroute, after=closest_depot_no)
 
+    @staticmethod
+    def _get_random_subroute_indices(random_route_len):
+        if random_route_len == 1:
+            return 0, 1
+        start_idx = random.randrange(0, random_route_len - 1)
+        end_idx = random.randrange(start_idx + 1, random_route_len + 1)
+        return end_idx, start_idx
+
     def crossover(self, first_individual, second_individual):
         descendant = Individual.of(first_individual)
         subroute = self._get_random_subroute(second_individual)
         self._insert_subroute(subroute, descendant)
-        descendant.normalize(self.settings.max_capacity)
+        descendant.normalize(self.settings.max_capacity, self.settings.depot_cnt)
         return descendant
 
     def swap(self, individual):
@@ -89,7 +96,31 @@ class Operators(object):
         routes[first_route_idx].depots[first_dept_idx] = routes[second_route_idx].depots[
             second_dept_idx]
         routes[second_route_idx].depots[second_dept_idx] = first
-        individual.normalize(self.settings.max_capacity)
+        individual.normalize(self.settings.max_capacity, self.settings.depot_cnt)
+
+    def inversion(self, individual):
+        random_route = random.choice(individual.routes).depots
+        random_route_len = len(random_route)
+        if random_route_len > 1:
+            end_idx, start_idx = Operators._get_random_subroute_indices(random_route_len)
+            random_route[start_idx:end_idx] = reversed(random_route[start_idx:end_idx])
+        individual.normalize(self.settings.max_capacity, self.settings.depot_cnt)
+
+    def insertion(self, individual):
+        depot_to_insert = random.choice(self.settings.depots)
+        individual.insert_depot(depot_to_insert)
+        individual.normalize(self.settings.max_capacity, self.settings.depot_cnt)
+
+    def displacement(self, individual):
+        route_to_get_subroute_from = random.choice(individual.routes)
+        route_to_insert_subroute_to = random.choice(individual.routes)
+        start_idx, end_idx = self._get_random_subroute_indices(len(route_to_get_subroute_from))
+        subroute = route_to_get_subroute_from.depots[start_idx:end_idx]
+        after = random.randrange(0, len(route_to_insert_subroute_to))
+        route_to_insert_subroute_to.insert_subroute(subroute,
+                                                    after=after)
+        del route_to_get_subroute_from.depots[start_idx:end_idx]
+        individual.normalize(self.settings.max_capacity, self.settings.depot_cnt)
 
 
 
