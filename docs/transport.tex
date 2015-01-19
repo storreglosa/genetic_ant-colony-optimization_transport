@@ -1,0 +1,161 @@
+\documentclass[11pt,a4paper]{report}
+
+% ------------------------------------------------------------------------------
+
+\usepackage[cp1250]{inputenc}
+\usepackage[english,polish]{babel}
+\usepackage{polski}
+\usepackage{indentfirst}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{setspace}
+\doublespacing
+\usepackage{hyperref}
+\usepackage{float}
+%\usepackage{amssymb}
+\usepackage{graphicx}
+\usepackage{gensymb}
+
+\usepackage[lined,boxed,commentsnumbered]{algorithm2e}
+\author{Marek Sadowski, Marcin Jaroch}
+\title{Inteligencja Obliczeniowa}
+\begin{document}
+\begin{titlepage}
+\thispagestyle{empty}
+\begin{center}
+\huge \bf Akademia Górniczo Hutnicza\\
+\normalsize im. Stanis³awa Staszica
+\vskip -5pt
+\rule{\textwidth}{.1mm}
+\vskip 5pt
+\large Wydzia³ Informatyki, Elektroniki i Telekomunikacji\\
+\end{center}
+\vskip 72pt
+\vskip 12pt
+\vskip 12pt
+\begin{center}
+{\bf \large Projekt z przedmiotu}
+\end{center}
+\vskip 12pt
+\begin{center}
+{\bf \huge Inteligencja Obliczeniowa}
+\end{center}
+\begin{center}
+{\bf \large Zastosowania algorytmów ewolucyjnych w problemach optymalizacji transportu - implementacja wybranego algorytmu oraz eksperymentalne badanie efektywnoœci}
+\end{center}
+\begin{spacing}{1.1}
+\vskip 12pt
+\vskip 12pt
+\vskip 72pt
+\begin{flushleft}
+{\emph{Autorzy:} \\Marek Sadowski \\Marcin Jaroch}
+\end{flushleft}
+\begin{flushright}
+\vskip -46pt
+\vskip -8pt
+{\emph{Prowadz¹cy:} \\ dr in¿. Rafa³ Dre¿ewski\\}
+
+\end{flushright}
+\end{spacing}
+\vfill
+\noindent
+\rule[-12pt]{\textwidth}{.1mm}
+
+\end{titlepage}
+\pagenumbering{gobble}
+
+\begin{abstract}
+Celem projektu by³o zaimplementowanie wybranego algorytmu ewolucyjnego z zakresu optymalizacji transportu. Dokument ten przedstawia zasadê dzia³ania wybranego algorytmu i proces implementacji z uwzglêdnieniem wykorzystanych narzêdzi oraz przeprowadzone eksperymenty wraz z wynikami. 
+\end{abstract}
+\begin{spacing}{1}
+\tableofcontents
+\end{spacing}
+\pagenumbering{arabic}
+\chapter{Definicja problemu i wybrany algorytm}\label{sec:definicja-problemu-i-wybrany-algorytm}
+W tym rozdziale znajduje siê opis problemu i algorytmu go rozwi¹zuj¹cego zgodny z artyku³em \emph{GVR: a New Genetic Representation for the Vehicle Routing Problem} autorstwa \emph{Francisco B. Pereira, Jorge Tavares, Penousal Machado, Ernesto Costa}.
+\section{Problem}\label{sec:problem}
+Rozwa¿any problem mo¿na formalnie zdefiniowaæ w nastêpuj¹cy sposób: Zak³adamy istnienie jednego, centralnego oœrodka $0$, który wykorzystuje $k$ niezale¿nych samochodów dostawczych. Ka¿dy z pojazdów posiada identyczn¹ ³adownoœæ $C$. Nale¿y obs³u¿yæ $n$ klientów o $d_i$ zapotrzebowaniach, $i = 1, 2, ..., n$. Samochody musz¹ wykonaæ dostawy do klientów z minimaln¹ ca³kowit¹ d³ugoœci¹ trasy, gdzie d³ugoœæ $c_{ij}$ to odleg³oœæ pomiêdzy klientami $i$ i $j$ gdzie $i \in [1, n]$. Ka¿dy klient musi byæ odwiedzony dok³adnie jeden raz. Rozwi¹zaniem problemu jest zbiór $k$ tras ${R_1, ..., R_k}$ gdzie dla ka¿dej trasy $R_q$ suma zapotrzebowañ nie przekracza $C$.
+\section{Algorytm}
+Podobnie jak w innych algorytmach ewolucyjnych, mo¿emy w tym przypadku zdefiniowaæ chromosom (bêd¹cy reprezentacj¹ pojedynczego rozwi¹zania) oraz operatory genetyczne.
+\subsection{Reprezentacja rozwi¹zania}
+Chromosom sk³ada siê z kolekcji œcie¿ek. Ka¿da œcie¿ka odpowiada jednemu samochodowi. Przedstawia to rysunek \ref{fig:chromosom}.
+\begin{figure}[H]
+	\begin{center}
+		\includegraphics[width=0.5\linewidth]{./chromosome.png}
+		\caption{Reprezentacja chromosomu. Sx i Cx oznaczaj¹ odpowiednio samochód i klienta.}
+		\label{fig:chromosom}
+	\end{center}
+\end{figure}
+\subsection{Operatory}
+\subsubsection{Krzy¿owanie}
+Sposób krzy¿owania osobników $I_1$ i $I_2$ mo¿na wyraziæ jako listê kroków:
+\begin{enumerate}
+	\item Wybierz losow¹ pod-œcie¿kê $SR$ z $I_2$
+	\item Wybierz klienta $c$, nie znajduj¹cego siê w $SR$, który ma najmniejszy dystans do pierwszego klienta w $ SR $
+	\item Wstaw $ SR $ do $I_1$ zaraz po $c$
+	\item Usuñ zduplikowanych klientów w $I_1$ otrzymuj¹c potomka $D$
+\end{enumerate}
+\subsubsection{Mutacja}
+Autorzy artyku³u, na którym siê wzorowano przy realizacji projektu, przewidzieli cztery rodzaje mutacji. S¹ to operatory dzia³aj¹ce na pojedynczym osobniku.
+\begin{description}
+	\item[Swap] losowo wybiera dwóch klientów i zamienia ich miejscami.
+	\item[Inversion] wybiera pod-œcie¿kê i odwraca jej kolejnoœæ.
+	\item[Insertion] wybiera klienta i wstawia go do losowej œcie¿ki (mo¿e tworzyæ now¹ œcie¿kê).
+	\item[Displacement] wybiera pod-œcie¿kê i wstawia j¹ w inne, losowo wybrane, miejsce (mo¿e tworzyæ now¹ œcie¿kê).
+\end{description}
+\subsection{Selekcja}
+Pos³u¿ono siê selekcj¹ turniejow¹ o rozmiarze turnieju równym 5. 
+\chapter{Implementacja}
+Ta czêœæ traktuje zarówno o procesie wykorzystanych narzêdziach jak i szczegó³ach implementacyjnych.
+\section{Narzêdzia}
+Jêzykiem programowania, jaki zosta³ wykorzystany jest Python 2.7.8. Oprócz biblioteki standardowej tego jêzyka, u¿yto tak¿e frameworka DEAP, wspomagaj¹cego implementacjê algorytmów genetycznych.
+G³ówne cechy DEAP: 
+\begin{itemize}
+	\item Predefiniowane chromosomy
+	\item Typowe rodzaje krzy¿ówek i mutacji
+	\item Operatory selekcji
+	\item Programowanie genetyczne
+	\item Integracja z NumPy i NetworX
+\end{itemize}
+\section{Implementacja}
+Problem zosta³ wyra¿ony za pomoc¹ klas jêzyka Python. Wyró¿niono klasy reprezentuj¹ce klienta, œcie¿kê oraz osobnika. Graf odleg³oœci miêdzy klientami reprezentowany jest przez macierz symetryczn¹. Wszelkie dane wejœciowe (macierz odleg³oœci, ³adownoœæ samochodu, maksymalne zapotrzebowanie klienta) mog¹ zostaæ zainicjowane losowo, lub wprowadzone rêcznie w pliku konfiguracyjnym.
+Pomimo u¿ycia biblioteki DEAP, wszystkie potrzebne operatory (z wyj¹tkiem selekcji), nale¿a³o zaimplementowaæ od podstaw. Zosta³o to wykonane zgodnie z opisem w rozdziale \ref{sec:definicja-problemu-i-wybrany-algorytm}. 
+Ponadto, w trakcie prac implementacyjnych, zasz³a potrzeba modyfikacji lub dodania nowych elementów do bazowego algorytmu, z uwagi na niewystarczaj¹co szczegó³owy opis. Kolejne sekcje skupiaj¹ siê na wspomnianych elementach.
+\subsection{Normalizacja osobnika}
+Operatory mutacji i krzy¿owania mog¹ wprowadziæ osobnika w nieprawid³owy stan. Mo¿liwe jest powielenie klienta lub przekroczenie limitu ³adownoœci na pojedynczej œcie¿ce. Aby zredukowaæ ten problem zaimplementowano procedurê normalizacji, zapisan¹ poni¿ej.\\
+Dla ka¿dej œcie¿ki w osobniku wykonuj:
+\begin{enumerate}
+	\item Jeœli suma zapotrzebowañ na œcie¿ce przekracza limit ³adownoœci, wyznacz minimaln¹ liczbê pod-œcie¿ek spe³niaj¹cych warunki.
+	\item Zast¹p œcie¿kê wyznaczonymi pod-œcie¿kami.
+\end{enumerate}
+Procedura uruchamiana jest po ka¿dej krzy¿ówce b¹dŸ mutacji i zapewnia spójnoœæ osobników populacji.
+\subsection{Generacja wstêpnej populacji}
+Analogiczna procedura opisana w artykule bazowym nie gwarantowa³a znormalizowanych osobników. Zmodyfikowane tworzenie wstêpnej populacji przebiega nastêpuj¹co:
+~\\
+\begin{algorithm}[H]
+
+		
+\While{nieodwiedzeni klienci}{
+	\begin{enumerate}
+		\item	Wybierz losowego klienta $c$
+		\item	Dodaj go do aktualnej œcie¿ki $R$, je¿eli po dodaniu suma zapotrzebowañ na $R$ nie przekroczy limitu $C$
+		\item W przeciwnym wypadku umieœæ $c$ w nowej œcie¿ce
+	\end{enumerate}
+		
+}
+\end{algorithm}
+~\\
+\chapter{Eksperymenty}
+Badano zachowanie algorytmu 
+
+\end{document}
+
+
+
+
+
+
+
+
+
+

@@ -1,3 +1,4 @@
+from itertools import izip
 import random
 
 
@@ -25,14 +26,17 @@ class Route(object):
         return self._depots
 
     def sum_of_demands(self):
-        return sum(depot.demand for depot in self.depots)
+        result = 0
+        for depot in self.depots:
+            result += depot.demand
+        return result
 
     def calculate_length(self, distance_array):
         result = 0
         first_segment_length = distance_array[0][self.depots[0].depot_no]
         last_segment_length = distance_array[0][self.depots[-1].depot_no]
         result += first_segment_length + last_segment_length
-        for curr, nxt in zip(self.depots, self.depots[1:]):
+        for curr, nxt in izip(self.depots, self.depots[1:]):
             result += distance_array[curr.depot_no][nxt.depot_no]
         return result
 
@@ -124,7 +128,18 @@ class Individual(object):
                     result.append(Route(depots=[current_depot]))
         return result
 
-    def normalize(self, max_demand_on_route, expected_depot_cnt=None):
+    def check_integrity(self, config):
+        if config.debug:
+            depots_in_individual = [depot for route in self.routes for depot in route.depots]
+            if len(set(depots_in_individual)) != config.depot_cnt - 1:
+                raise Exception("Invalid depot count")
+            demands = [route.sum_of_demands() for route in self.routes]
+            for demand in demands:
+                if demand > config.max_capacity:
+                    raise Exception("Route exceeds max demand")
+
+    def normalize(self, config):
+        max_demand_on_route = config.max_capacity
         new_routes = []
         for route in self.routes:
             if route.sum_of_demands() > max_demand_on_route:
@@ -134,10 +149,7 @@ class Individual(object):
         self._routes = new_routes + filtered_routes
         for i in xrange(len(self.routes)):
             self.routes[i].route_no = i
-        if expected_depot_cnt:
-            depots_in_individual = [depot for route in self.routes for depot in route.depots]
-            if len(set(depots_in_individual)) != expected_depot_cnt - 1:
-                raise Exception("Invalid depot count")
+        self.check_integrity(config)
 
     def route_with_depot(self, depot):
         for route in self.routes:

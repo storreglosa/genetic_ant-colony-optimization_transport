@@ -5,12 +5,11 @@ from deap import creator
 from deap import tools
 from algorithm.operators import Operators
 from model.individual import Individual
-from model.test_individual import TestRoute
 from utils.config import Config
 
 random.seed(64)
 
-config = Config(max_demand=27, max_capacity=97, depot_cnt=37, randomize=True)
+config = Config(max_demand=27, max_capacity=97, depot_cnt=37, randomize=True, debug=False)
 #config = Config()
 operators = Operators(settings=config)
 creator.create("FitnessMin", base.Fitness, weights=(-1.0,))
@@ -55,7 +54,7 @@ toolbox.register("select", tools.selTournament, tournsize=3)
 
 
 def main():
-    gen_num, pop_size = 200, 200
+    gen_num, pop_size = 500, 300
     mate_prob, swap_prob, inversion_prob, insertion_prob, displacement_prob = 0.75, 0.05, 0.1, 0.05, 0.1
 
     pop = toolbox.population(size=pop_size)
@@ -75,7 +74,7 @@ def main():
         print("-- Generation %i --" % g)
 
         # Select the next generation individuals
-        offspring = toolbox.select(pop, 50)
+        offspring = toolbox.select(pop, 100)
         # Clone the selected individuals
         offspring = list(map(Individual.of, offspring))
         random.shuffle(offspring)
@@ -121,6 +120,6 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    cProfile.run('main()')
 
 

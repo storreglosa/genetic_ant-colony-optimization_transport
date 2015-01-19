@@ -81,7 +81,7 @@ class Operators(object):
         descendant = Individual.of(first_individual)
         subroute = self._get_random_subroute(second_individual)
         self._insert_subroute(subroute, descendant)
-        descendant.normalize(self.settings.max_capacity, self.settings.depot_cnt)
+        descendant.normalize(self.settings)
         return descendant
 
     def swap(self, individual):
@@ -96,7 +96,7 @@ class Operators(object):
         routes[first_route_idx].depots[first_dept_idx] = routes[second_route_idx].depots[
             second_dept_idx]
         routes[second_route_idx].depots[second_dept_idx] = first
-        individual.normalize(self.settings.max_capacity, self.settings.depot_cnt)
+        individual.normalize(self.settings)
 
     def inversion(self, individual):
         random_route = random.choice(individual.routes).depots
@@ -104,12 +104,12 @@ class Operators(object):
         if random_route_len > 1:
             end_idx, start_idx = Operators._get_random_subroute_indices(random_route_len)
             random_route[start_idx:end_idx] = reversed(random_route[start_idx:end_idx])
-        individual.normalize(self.settings.max_capacity, self.settings.depot_cnt)
+        individual.normalize(self.settings)
 
     def insertion(self, individual):
         depot_to_insert = random.choice(self.settings.depots)
         individual.insert_depot(depot_to_insert)
-        individual.normalize(self.settings.max_capacity, self.settings.depot_cnt)
+        individual.normalize(self.settings)
 
     def displacement(self, individual):
         route_to_get_subroute_from = random.choice(individual.routes)
@@ -120,7 +120,7 @@ class Operators(object):
         route_to_insert_subroute_to.insert_subroute(subroute,
                                                     after=after)
         del route_to_get_subroute_from.depots[start_idx:end_idx]
-        individual.normalize(self.settings.max_capacity, self.settings.depot_cnt)
+        individual.normalize(self.settings)
 
 
 

@@ -1,5 +1,6 @@
 .idea/
 
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -54,3 +55,10 @@ docs/_build/
 
 # PyBuilder
 target/
+
+docs/transport.toc
+docs/transport.aux
+docs/transport.bbl
+docs/transport.out
+docs/transport.blg
+docs/transport.synctex.gz
