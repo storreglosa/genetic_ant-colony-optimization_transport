@@ -54,7 +54,7 @@ toolbox.register("select", tools.selTournament, tournsize=3)
 
 
 def main():
-    gen_num, pop_size = 500, 300
+    gen_num, pop_size = 100, 300
     mate_prob, swap_prob, inversion_prob, insertion_prob, displacement_prob = 0.75, 0.05, 0.1, 0.05, 0.1
 
     pop = toolbox.population(size=pop_size)
@@ -105,21 +105,21 @@ def main():
         for ind, fit in zip(invalid_ind, fitnesses):
             ind.fitness.values = fit
 
-        print("  Evaluated %i individuals" % len(invalid_ind))
+        #print("  Evaluated %i individuals" % len(invalid_ind))
 
         # The population is entirely replaced by the offspring
         pop[:] = offspring
 
         # Gather all the fitnesses in one list and print the stats
-        print_stats(pop)
+        #print_stats(pop)
 
-    print("-- End of (successful) evolution --")
+    #print("-- End of (successful) evolution --")
 
     best_ind = tools.selBest(pop, 1)[0]
     print("Best individual is %s, %s" % (best_ind, best_ind.fitness.values))
 
 
 if __name__ == "__main__":
-    cProfile.run('main()')
+    main()
 
 
