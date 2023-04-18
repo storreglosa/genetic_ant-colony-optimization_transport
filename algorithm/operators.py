@@ -64,7 +64,7 @@ class Operators(object):
         distances = self.settings.distance_matrix
         first_depot_of_subroute = subroute[0]
         closest_depot_no = first_depot_of_subroute.get_closest_depot_no(distances)
-        for route_idx in xrange(len(individual.routes)):
+        for route_idx in range(len(individual.routes)):
             current_route = individual.routes[route_idx]
             if current_route.contains_depot(closest_depot_no):
                 current_route.insert_subroute(subroute, after=closest_depot_no)
