@@ -1,0 +1,29 @@
+# conda env create --file environment.yml
+# mamba env create --file environment.yml
+name: genetic_algorithm_vehicle_routin
+channels:
+  - anaconda
+  - conda-forge
+  - defaults
+dependencies:
+  - black
+  - invoke
+  - jupyter
+  - jupyterlab
+  - matplotlib
+  - missingno
+  - nbdime
+  - numpy
+  - pandas
+  - pandas-flavor
+  - pandas-profiling
+  - pip
+  - pyjanitor
+  - pylint
+  - pyprojroot
+  - pyspark
+  - python=3.7
+  - python-dotenv
+  - seaborn
+  - deap
+  - random
