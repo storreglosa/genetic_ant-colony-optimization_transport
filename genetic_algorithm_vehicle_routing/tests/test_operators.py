@@ -1,5 +1,5 @@
 from unittest import TestCase
-from algorithm.operators import Operators
+from genetic_algorithm_vehicle_routing.operators import Operators
 from model.depot import Depot
 from model.individual import Route, Individual
 

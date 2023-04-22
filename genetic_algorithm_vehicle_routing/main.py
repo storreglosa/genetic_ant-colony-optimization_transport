@@ -3,7 +3,7 @@ import random
 from deap import base
 from deap import creator
 from deap import tools
-from algorithm.operators import Operators
+from genetic_algorithm_vehicle_routing.operators import Operators
 from model.individual import Individual
 from utils.config import Config
 

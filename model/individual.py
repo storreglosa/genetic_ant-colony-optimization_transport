@@ -1,4 +1,3 @@
-from itertools import izip
 import random
 
 
@@ -36,7 +35,7 @@ class Route(object):
         first_segment_length = distance_array[0][self.depots[0].depot_no]
         last_segment_length = distance_array[0][self.depots[-1].depot_no]
         result += first_segment_length + last_segment_length
-        for curr, nxt in izip(self.depots, self.depots[1:]):
+        for curr, nxt in zip(self.depots, self.depots[1:]):
             result += distance_array[curr.depot_no][nxt.depot_no]
         return result
 
@@ -118,7 +117,7 @@ class Individual(object):
             result = [route]
         else:
             result = [Route()]
-            for i in xrange(len(route) - 1, -1, -1):
+            for i in range(len(route) - 1, -1, -1):
                 current_new_route = result[-1]
                 current_depot = depots[i]
                 next_demand_sum = current_new_route.sum_of_demands() + current_depot.demand
@@ -147,7 +146,7 @@ class Individual(object):
                 new_routes += divided_routes
         filtered_routes = [route for route in self.routes if max_demand_on_route >= route.sum_of_demands() > 0]
         self._routes = new_routes + filtered_routes
-        for i in xrange(len(self.routes)):
+        for i in range(len(self.routes)):
             self.routes[i].route_no = i
         self.check_integrity(config)
 
