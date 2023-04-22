@@ -21,9 +21,11 @@ dependencies:
   - pyjanitor
   - pylint
   - pyprojroot
+  - pathlib
   - pyspark
   - python=3.7
   - python-dotenv
   - seaborn
+  - plotly
   - deap
   - random
