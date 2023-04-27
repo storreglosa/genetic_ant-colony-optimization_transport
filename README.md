@@ -1,8 +1,8 @@
 # Genetic_algorithm_vehicle_routing
 
-This project is an application of genetic algorithm in the context of transportation engineering. We use a genetic algorithm to solve vehicle routing problems.
+This project is a review of the ant colony optimization algorithm and the genetic algorithm and their applications on transportation engineering.
 
-Here you are going to find a brief review of the theoretical framework of this metaheuristic together with a deployment in python code. In addition, we are going to be talking about the application of this framework in transportation engineering context
+Here you are going to find a brief review of the theoretical framework of these metaheuristic together with a deployment in python code. In addition, we are going to be talking about some of the application of these framework in the transportation engineering context
   
 ## Installation guide
 
@@ -41,7 +41,7 @@ Please read [install.md](install.md) for details on how to set up this project.
         ├── models         <- Scripts of different features of the models 
         │
         ├── utils          <- Scripts to help with common tasks.
-            └── paths.py   <- Helper functions to relative file referencing across project.
+        |    └── paths.py   <- Helper functions to relative file referencing across project.
         │
         └── visualization  <- Scripts to create exploratory and results oriented visualizations.
             └── visualize.py

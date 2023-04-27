@@ -1,4 +1,4 @@
-# Genetic_Algorithm_vehicle_routing guide installation
+# genetic_ant-colony-optimization_transport guide installation
 
 ## Prerequisites
 
@@ -8,15 +8,15 @@
 ## Create environment
 
 ```bash
-conda env create --file environment.yml --name genetic_algorithm_vehicle_routing
-conda activate genetic_algorithm_vehicle_routing
+conda env create --file environment.yml --name genetic_ant-colony-optimization_transport
+conda activate genetic_ant-colony-optimization_transport
 ```
 
 or 
 
 ```bash
 mamba env create -f environment.yml
-activate genetic_algorithm_vehicle_routing
+activate genetic_ant-colony-optimization_transport
 ```
 
 The packages necessary to run the project are now installed inside the conda environment.
@@ -25,7 +25,7 @@ The packages necessary to run the project are now installed inside the conda env
 
 ## Set up project's module
 
-To move beyond notebook prototyping, all reusable code should go into the `genetic_algorithm_vehicle_routing/` folder package. To use that package inside your project, install the project's module in editable mode, so you can edit files in the `genetic_algorithm_vehicle_routing` folder and use the modules inside your notebooks :
+To move beyond notebook prototyping, all reusable code should go into the `genetic_ant-colony-optimization_transport/` folder package. To use that package inside your project, install the project's module in editable mode, so you can edit files in the `genetic_ant-colony-optimization_transport` folder and use the modules inside your notebooks :
 
 ```bash
 pip install --editable .

@@ -18,11 +18,11 @@ def readme() -> str:
     return open(os.path.join(os.path.dirname(__file__), 'README.md')).read()
 
 setup(
-    name='genetic_algorithm_vehicle_routing',
+    name='genetic_ant-colony-optimization_transport',
     version='0.1.0',
     author='Santiago Torreglosa Diaz',
     author_email='santiagotorreglosadiaz@gmail.com',
-    description='This project is an adaptation of the hryniu555/transport repositoy for general cases. Here you are going to find a solutiong for vehicule rounting problems using genetic algorithm',
+    description='This project is a review of the ant colony optimization and genetic algorithms and their applications on transportation engineering',
     python_requires='>=3',
     license='BSD-3',
     url='',
