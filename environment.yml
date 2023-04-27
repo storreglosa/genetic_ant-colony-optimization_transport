@@ -1,6 +1,6 @@
 # conda env create --file environment.yml
 # mamba env create --file environment.yml
-name: genetic_algorithm_vehicle_routin
+name: genetic_ant-colony-optimization_transport
 channels:
   - anaconda
   - conda-forge
