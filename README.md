@@ -48,7 +48,7 @@ Please read [install.md](install.md) for details on how to set up this project.
         └── visualization  <- Scripts to create exploratory and results oriented visualizations.
             └── visualize.py
             
-    └──ant_colony_salesman_problem <- Source code for traveling salesman problem with ant colony optimization.
+    └──ant_colony_salesman_problem <- Source code for Travelling salesman problem with ant colony optimization.
         ├── __init__.py    <- Makes genetic_algorithm_vehicle_routing a Python module.
         |
         ├── models         <- Scripts of different features of the models
