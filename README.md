@@ -29,6 +29,8 @@ Please read [install.md](install.md) for details on how to set up this project.
     ├── setup.py           <- Makes project pip installable (pip install -e .)
     │                         so genetic_algorithm_vehicle_routing can be imported.
     │
+    ├── slides.pptx        <- Power Point presentation
+    |
     └── genetic_algorithm_vehicle_routing  <- Source code for vehicle routing problem with genetic algorithm.
         ├── __init__.py    <- Makes genetic_algorithm_vehicle_routing a Python module.
         │
@@ -49,11 +51,11 @@ Please read [install.md](install.md) for details on how to set up this project.
             └── visualize.py
             
     └──ant_colony_salesman_problem <- Source code for Travelling salesman problem with ant colony optimization.
-        ├── __init__.py    <- Makes genetic_algorithm_vehicle_routing a Python module.
+        ├── __init__.py    <- Makes ant_colony_salesman_problem a Python module.
         |
         ├── models         <- Scripts of different features of the models
         |
-        ├── tests          <- tests.
+        └── tests          <- tests.
         
 
 
