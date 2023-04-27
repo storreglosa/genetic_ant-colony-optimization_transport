@@ -4,6 +4,8 @@ from numpy.random import choice as np_choice
 from math import sqrt
 import matplotlib.pyplot as plt
 import json
+from model import functions
+
 
 
 class AntColony(object):
