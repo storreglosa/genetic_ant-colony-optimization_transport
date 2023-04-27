@@ -4,7 +4,7 @@ from numpy.random import choice as np_choice
 from math import sqrt
 import matplotlib.pyplot as plt
 import json
-from ant_colony_salesman_problem import main
+from ant_colony_salesman_problem.main import AntColony
 
 #Presolved TSP Instance
 with open("/home/storreglosa/Projects/03_Metaheuristicas_transporte/Genetic_Algoritm_Vehicle_Routing/sample_data/gr120.json", "r") as tsp_data:
