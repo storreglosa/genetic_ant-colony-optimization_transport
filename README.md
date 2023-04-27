@@ -29,7 +29,7 @@ Please read [install.md](install.md) for details on how to set up this project.
     ├── setup.py           <- Makes project pip installable (pip install -e .)
     │                         so genetic_algorithm_vehicle_routing can be imported.
     │
-    └── genetic_algorithm_vehicle_routing  <- Source code for use in this project.
+    └── genetic_algorithm_vehicle_routing  <- Source code for vehicle routing problem with genetic algorithm.
         ├── __init__.py    <- Makes genetic_algorithm_vehicle_routing a Python module.
         │
         ├── data           <- Scripts to download or generate data.
@@ -40,10 +40,21 @@ Please read [install.md](install.md) for details on how to set up this project.
         │
         ├── models         <- Scripts of different features of the models 
         │
+        ├── tests          <- tests.
+        |
         ├── utils          <- Scripts to help with common tasks.
         |    └── paths.py   <- Helper functions to relative file referencing across project.
         │
         └── visualization  <- Scripts to create exploratory and results oriented visualizations.
             └── visualize.py
+            
+    └──ant_colony_salesman_problem <- Source code for traveling salesman problem with ant colony optimization.
+        ├── __init__.py    <- Makes genetic_algorithm_vehicle_routing a Python module.
+        |
+        ├── models         <- Scripts of different features of the models
+        |
+        ├── tests          <- tests.
+        
+
 
 ---
